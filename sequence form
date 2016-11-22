@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define OK 1
+#define TRUE 1
+#define FALSE 0
+#define LIST_INIT_SIZE 10
+#define LISTINCREMENT 10 
+
+
+typedef int Status;
+typedef int ElemType; 
+
+typedef struct{         //线性表结构  
+	ElemType *elem;         
+	int length;            
+	int listsize;
+}SqList;   
+
+Status InitList(SqList *L){  //初始化线性表 验证成功！ 
+    (*L).elem=(ElemType*)malloc(LIST_INIT_SIZE*sizeof(ElemType));
+    if((*L).elem==NULL)exit(FALSE); 
+    (*L).length=0;
+    (*L).listsize=LIST_INIT_SIZE;
+    printf("InitList成功\n");
+    return OK;
+}
+
+Status DestroyList(SqList *L) { //销毁线性表 验证成功！ 
+	if((*L).elem!=NULL){
+		free((*L).elem);
+	}
+	(*L).length=0;
+	(*L).listsize=0;
+	printf("线性表已消除");
+	return OK;
+}
+
+Status ClearList(SqList *L) { //清空线性表，验证成功 ！ 
+	if((*L).elem!=NULL){
+		free((*L).elem);
+	}
+    (*L).elem=(ElemType*)malloc(LIST_INIT_SIZE*sizeof(ElemType));
+    if((*L).elem==NULL)exit(FALSE); 	
+    (*L).length=0;
+    (*L).listsize=LIST_INIT_SIZE;
+    return OK;
+}
+Status ListEmpty(SqList L){
+	if (L.length== 0) return TRUE;else return FALSE;
+}
+int ListLength(SqList L){    //获取表长，验证成功！ 
+	return L.length;
+}
+ElemType GetElem(SqList L,int i){   //获取元素，验证成功！ 
+	int j;ElemType *p;
+	if(L.length!=0){
+		if((i>0) && (i<=L.length)){
+			p = L.elem;
+        	return p[i-1];
+		}else return FALSE;
+	}else return FALSE;
+}
+
+ElemType PirorElem(SqList L,ElemType e){ //获取前继，验证成功 
+	int i;ElemType *p;
+	p = L.elem;
+	for(i = 0;i< L.length;i++){
+		if(p[i]==e) break;
+		else if(p[i]!=e && i == L.length-1) return 0; 
+	}
+	if (i!=0) return p[i-1];
+	else printf("该元素无前继，返回0"); return FALSE;
+}
+
+ElemType NextElem(SqList L,ElemType e){
+	int i;ElemType *p;
+	p = L.elem;
+	for(i = 0;i< L.length;i++){
+		if(p[i]==e) break;
+		else if(p[i]!=e && i == L.length-1) return 0; 
+	}
+	if (i!=L.length) return p[i+1];
+	else printf("该元素无后，返回0"); return FALSE;
+}
+Status ListInsert(SqList *L,int i,ElemType e){    //插入元素，验证成功！ 
+	ElemType *q ,*newbase; 
+	if(!(*L).elem)return FALSE;
+	if(i<1&&i>(*L).length+1)return FALSE; 
+	q = (*L).elem;
+	if ((*L). length==0 && i ==1){
+		q[0] = e;
+		(*L). length=(*L). length+1;
+		return OK;
+	};
+	//长度大于一 
+	if ((*L). length >= ((*L).listsize)){    //增加容量 
+		newbase =(ElemType*)realloc((*L).elem,((*L).listsize+LISTINCREMENT)*sizeof(ElemType));
+		if(!newbase)exit(0);
+		(*L).elem = newbase;
+		(*L).listsize += LISTINCREMENT;
+		printf("增加容量成功！表长为%d",(*L).length);
+		printf("增加容量成功！表大小为%d",(*L).listsize);
+	} 
+	q = &((*L).elem[i-1]);//q为插入位置 
+	for(newbase = &((*L).elem[(*L).length-1]);newbase>=q;--newbase) *(newbase+1) = *newbase;
+	*q = e;
+	++(*L).length;
+	return OK;
+}
+
+Status ListDelete(SqList *L,int i,ElemType e){    //删除元素，验证成功 !
+	ElemType *q ,*newbase; 
+	if(!(*L).elem)return FALSE;
+	if(i<1&&i>(*L).length)return FALSE;//判断i值是否合法 
+	q = (*L).elem;
+	q = &((*L).elem[i-1]); //删除位置 
+	newbase = &((*L).elem[i]);
+	for(q = &((*L).elem[i-1]);i<(*L).length;i++) {
+	*q = *newbase;
+	q++;newbase++;
+	} 
+	(*L).length--;
+}
+//函数声明
+ Status InitList(SqList *L);
+ Status ListDelete(SqList *L,int i,ElemType e);
+ Status ListInsert(SqList *L,int i,ElemType e);
+int ListLength(SqList L);
+ElemType GetElem(SqList L,int i);
+Status ClearList(SqList *L);
+Status DestroyList(SqList *L);
+
+int main(){  //调试 
+	SqList MYLIST,*L;ElemType e; int i;
+	L = &MYLIST;
+	InitList(L);
+	printf("请输入列表数据：");
+	for(i = 1;i<10;i++){
+		scanf("%d",&e);
+		ListInsert(L,i,e);
+	}
+	for(i = 1;i<=MYLIST.length;i++){
+		printf("%d",MYLIST.elem[i-1]);
+	}
+	e = NextElem(MYLIST,2);
+	printf("%d",e);
+	DestroyList(L);
+	return OK;
+}
+
+
