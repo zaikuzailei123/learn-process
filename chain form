@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define OK 1
+#define TRUE 1
+#define FALSE 0
+
+typedef int Status;
+typedef int ElemType; 
+
+typedef struct LNode {   //节点 
+	ElemType data;
+	struct LNode *next;
+}LNode;
+ 
+typedef struct SqList{
+	LNode *headnode;
+	int length;
+}SqList; 
+
+Status InitList(SqList * L){   //初始化链表分配头指针，验证成功！ 
+	LNode* p;
+	(*L).headnode=(LNode*)malloc(sizeof(LNode));
+	(*L).length = 0;
+	p = (*L).headnode;
+	(*p).next = NULL;
+	(*p).data = 0;
+	printf("初始化成功！"); 
+	return 0;
+}
+
+Status ListInsert(SqList *L,int i,ElemType e){  //插入链表，成功！ 
+	LNode *np;LNode *p;int j;
+	if(i<1||i>(*L).length+1) exit(FALSE);
+	np = (LNode*)malloc(sizeof(LNode));
+	if(np==NULL)exit(FALSE); 
+	(*np).data = e;p = (*L).headnode;
+	for(j = 1;j<i;j++) p = (*p).next;
+	(*np).next = (*p).next;
+	(*p).next = np;
+	(*L).length = (*L).length+1;
+	return OK;
+}
+
+Status ListDelete(SqList *L,int i){   //删除元素，成功！ 
+	LNode *d;LNode *p;int j;
+	p = (*L).headnode;
+	if(i<1||i>(*L).length)exit(FALSE);
+	for(j = 1;j<i;j++) p = (*p).next;  //指针循环指向到要删除的上一个元素 
+	d = (*p).next; 
+	if (i!=(*L).length) (*p).next = (*((*p).next)).next; //跳过要删除的指针 
+	else((*p).next = NULL);
+	free(d);
+	(*L).length = (*L).length-1;
+	return 0;
+}
+ Status ListClear(SqList *L){ //销毁链表，保留头指针  成功！ 
+ 	int i,j;LNode * p;LNode * np;
+ 	if ((*L).length ==0 )exit(FALSE);
+ 	i = (*L).length;
+ 	p = (*L).headnode;p = (*p).next;
+ 	np = (*p).next;
+	for(j = 1;j<i;j++){ 
+	free(p);
+	p = np;
+	np = (*p).next;           
+	printf("free成功！");
+	}
+	free(p);
+	printf("free成功！");
+	(*L).length = 0;	
+	return 0;
+ }
+ 
+Status DestroyList(SqList *L){  //销毁线性表，验证成功！ 
+    ListClear(L);
+    free((*L).headnode);
+    printf("free成功!");
+    (*L).length = 0;
+    return 0;
+}
+
+ElemType GetElem(SqList L,int i){ //获取第i个元素 ,验证成功！ 
+    LNode *p;int j;
+    p = L.headnode;
+    if((i<=0) && (i>L.length)) exit(FALSE);
+	for(j = 0;j<i;j++) p = (*p).next;
+	return (*p).data;
+} 
+
+Status ListInsert(SqList *L,int i,ElemType e);
+Status DestroyList(SqList *L);
+Status InitList(SqList * L);
+Status ListDelete(SqList *L,int i);
+ElemType GetElem(SqList L,int i); 
+
+
+
+int main(){   //测试
+	SqList MYLIST;int e,i;LNode*np;LNode*p;
+	InitList(&MYLIST);
+	for(i = 1;i<=3;i++){
+	scanf("%d",&e);
+	ListInsert(&MYLIST,i,e);
+	};
+	ListInsert(&MYLIST,2,100);
+	ListDelete(&MYLIST,3);
+	p = (MYLIST).headnode;
+	np = (*MYLIST.headnode).next;
+	for(i = 1;i<=3;i++){
+	p = (*p).next;
+	printf("%d",(*p).data);
+	}
+	e = GetElem(MYLIST,1);
+	printf("%d",e);
+    DestroyList(&MYLIST);
+}
