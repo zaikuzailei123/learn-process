@@ -1,0 +1,42 @@
+#include<stdio.h> 
+#include<stdlib.h>
+
+
+
+typedef struct date{
+	int year;
+	int month;
+	int day;
+	int sum;
+}date;
+
+
+int main(){
+	int N;
+	scanf("%d",&N);
+	while(N){
+		date b;
+		scanf("%d%d%d",&b.year,&b.month,&b.day);
+		b.sum = 0;
+		switch(b.month-1){
+			case 12:b.sum+=31; 
+			case 11:b.sum+=30; 
+			case 10:b.sum+=31; 
+			case 9:b.sum+=30;
+			case 8:b.sum+=31;
+			case 7:b.sum+=31; 
+			case 6:b.sum+=30; 
+			case 5:b.sum+=31;
+			case 4:b.sum+=30; 
+			case 3:b.sum+=31; 
+			case 2:b.sum+=28; 
+			case 1:b.sum+=31; 	
+		}
+		b.sum +=b.day;
+		if(b.month>2){
+			if((b.year%400==0)||((b.year%4==0)&&(b.year%400!=0)&&(b.year%100 !=0))) b.sum++;
+		}
+		printf("%d\n",b.sum);
+		N--;
+	}	
+}
