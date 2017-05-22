@@ -1,0 +1,92 @@
+#include<stdio.h>
+
+
+struct ISR_BITS {
+    unsigned int bit0: 1;
+    unsigned int bit1: 1;
+    unsigned int bit2: 1;
+    unsigned int bit3: 1;
+    unsigned int bit4: 1;
+    unsigned int bit5: 1;
+    unsigned int bit6: 1;
+    unsigned int bit7: 1;
+    unsigned int rsv : 8;
+};
+
+union ISR_REG {
+    unsigned short all;
+    struct ISR_BITS bit;
+};
+
+
+
+void isr0(void){
+    printf("The Interrupt Service Routine isr0 is called!\n");
+}
+
+void isr1(void){
+    printf("The Interrupt Service Routine isr1 is called!\n");
+}
+
+void isr2(void){
+    printf("The Interrupt Service Routine isr2 is called!\n");
+}
+
+void isr3(void){
+    printf("The Interrupt Service Routine isr3 is called!\n");
+}
+
+void isr4(void){
+    printf("The Interrupt Service Routine isr4 is called!\n");
+}
+
+void isr5(void){
+    printf("The Interrupt Service Routine isr5 is called!\n");
+}
+
+void isr6(void){
+    printf("The Interrupt Service Routine isr6 is called!\n");
+}
+
+void isr7(void){
+    printf("The Interrupt Service Routine isr7 is called!\n");
+}
+
+
+
+int main(void){
+	unsigned N,mask = 1,temp;
+	union ISR_REG ready;int i;
+	void (*p_isr[8])(void);	
+	p_isr[0]=*isr0;
+	p_isr[1]=*isr1;	
+	p_isr[2]=*isr2;	
+	p_isr[3]=*isr3;	
+	p_isr[4]=*isr4;	
+	p_isr[5]=*isr5;	
+	p_isr[6]=*isr6;	
+	p_isr[7]=*isr7;	
+	scanf("%u",&N);
+	for(i = 0;i<N;i++){
+		scanf("%hd",&ready.all);
+		printf("%u:\n",ready.all);
+		temp=ready.all;
+		ready.bit.bit0=temp&mask;temp >>=1;
+		ready.bit.bit1=temp&mask;temp >>=1;
+		ready.bit.bit2=temp&mask;temp >>=1;
+		ready.bit.bit3=temp&mask;temp >>=1;
+		ready.bit.bit4=temp&mask;temp >>=1;
+		ready.bit.bit5=temp&mask;temp >>=1;
+		ready.bit.bit6=temp&mask;temp >>=1;
+		ready.bit.bit7=temp&mask;temp >>=1;
+		if(ready.bit.bit0) p_isr[0]();
+		if(ready.bit.bit1) p_isr[1]();
+		if(ready.bit.bit2) p_isr[2]();
+		if(ready.bit.bit3) p_isr[3]();
+		if(ready.bit.bit4) p_isr[4]();
+		if(ready.bit.bit5) p_isr[5]();
+		if(ready.bit.bit6) p_isr[6]();
+		if(ready.bit.bit7) p_isr[7]();
+		putchar('\n');
+	}
+}
