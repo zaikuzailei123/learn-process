@@ -1,0 +1,76 @@
+#include<stdio.h> 
+#include<stdlib.h>
+
+
+
+
+typedef struct Tstring{
+	char c_;
+	struct Tstring *next;
+}Tstring;
+
+int creatSTR(Tstring **head){
+	Tstring *p = *head,*q;
+	if(!p){
+		p = (Tstring *)malloc(sizeof(Tstring));
+		if(p){
+			*head=p;
+			p->next=NULL;
+			p->c_=getchar();
+		}
+	}
+	while(p->c_!='#'){
+		q = (Tstring *)malloc(sizeof(Tstring));
+		if(q){
+			q->next=NULL;
+			q->c_=getchar();
+			p->next = q;
+		}		
+		p=p->next;
+	}
+	getchar();
+	return 0;	 
+}
+
+int clearAll(Tstring *head){
+	Tstring *p=head,*q=head;
+	while(p){
+		q = p->next;
+		free(p);
+		p = q;
+	}
+	return 0;
+}
+
+int length(Tstring *head){
+	int i;
+	for(i = 0;head;i++){
+		head = head->next;
+	}
+	return i;
+}
+
+int printOutLink(Tstring *head){
+	Tstring *p=head;
+	while(p){
+		p->c_=='#'? putchar('\n'):putchar(p->c_);
+		p = p->next;
+	}
+}
+int main(){
+	char c;char *s;
+	Tstring *head=NULL,*p;
+	int n,i;
+	creatSTR(&head);
+	printOutLink(head);
+	n = length(head);
+	s=(char*)calloc(n+1,sizeof(char));
+	for(i = 0,p = head;i<n;i++,p=p->next){
+		
+		p->c_=='#'? (s[i]='\n'):(s[i]=p->c_);
+	}
+	s[n]='\0';
+	putchar('\n');
+	printf("%s",s);
+	clearAll(head);
+}
