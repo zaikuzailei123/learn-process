@@ -1,0 +1,44 @@
+#include<stdio.h> 
+#include<stdlib.h>
+
+#define N 3
+
+typedef struct std{
+	int num;
+	char name[19]; 
+	double score;
+}std;
+
+int put(std table[],int n){
+	int i; 
+	for(i = 0;i<n;i++){
+		printf("%d\t",table[i].num);
+		printf("%-20s",table[i].name);
+		printf("%lf",table[i].score);
+		putchar('\n');
+	}
+}
+
+int put2(std *p,int n){
+	int i; 
+	for(i = 0;i<n;i++,p++){
+		printf("%d\t",p->num);
+		printf("%-20s",p->name);
+		printf("%lf",p->score);
+		putchar('\n');
+	}	
+}
+
+int main(){
+	int n,i;std * p,table[N];
+	scanf("%d",&n);
+	while(n){
+		for(i = 0;i<N;i++){
+			scanf("%d%*c%s%lf",&(table[i].num),table[i].name,&(table[i].score));
+		}
+		put(table,N);
+		p=table;
+		put2(p,N);
+		n--;
+	}
+}
